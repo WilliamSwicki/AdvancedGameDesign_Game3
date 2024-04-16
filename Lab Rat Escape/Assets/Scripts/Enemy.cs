@@ -11,6 +11,8 @@ public class Enemy : MonoBehaviour
     public GameObject player;
     public bool isCaptureing;
     public int captureRate = 1;
+    public bool isStuned = false;
+    public int shockTime;
 
     // Start is called before the first frame update
     void Start()
@@ -22,7 +24,16 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         //move to the player
-        transform.position = Vector3.MoveTowards(transform.position, new Vector3(player.transform.position.x,1,player.transform.position.z), speed * Time.deltaTime);
+        if(isStuned)
+        {
+            transform.position = this.transform.position;
+            StartCoroutine(StunTimer());
+        }
+        else
+        {
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(player.transform.position.x, 3, player.transform.position.z), speed * Time.deltaTime);
+        }
+        
         if(isCaptureing )
         {
             player.GetComponent<PlayerScript>().capture -= (captureRate * Time.deltaTime);
@@ -42,5 +53,10 @@ public class Enemy : MonoBehaviour
             isCaptureing = false;
 
         }
+    }
+    IEnumerator StunTimer()
+    {
+        yield return new WaitForSeconds(shockTime);
+        isStuned = false;
     }
 }

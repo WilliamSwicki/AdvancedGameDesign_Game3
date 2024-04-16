@@ -14,6 +14,7 @@ public class PlayerScript : MonoBehaviour
     public bool isJumping = false;
     public Vector3 playerPos;
     public Rigidbody rb;
+    public GameObject model;
 
     public float capture;
     public float maxCapture;
@@ -38,7 +39,7 @@ public class PlayerScript : MonoBehaviour
         
         if(capture<=0)
         {
-            SceneManager.LoadScene(2);
+            SceneManager.LoadScene(0);
         }
         captureBarAmt = capture / maxCapture;
         captureBar.fillAmount = captureBarAmt;
@@ -56,6 +57,10 @@ public class PlayerScript : MonoBehaviour
         dir = context.ReadValue<Vector2>();
         h = dir.x;
         v = dir.y;
+        if (dir.magnitude > 0.25f)
+        {
+            model.transform.rotation = Quaternion.LookRotation(new Vector3(h, 0, v), Vector3.up);
+        }
     }
     public void PlayerJump(InputAction.CallbackContext context)
     {
